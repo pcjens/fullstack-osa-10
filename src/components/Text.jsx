@@ -21,15 +21,25 @@ const styles = StyleSheet.create({
     fontWeightBold: {
         fontWeight: theme.fontWeights.bold,
     },
+    badge: {
+        backgroundColor: theme.colors.primary,
+        color: theme.colors.textOnPrimary,
+        alignSelf: 'flex-start',
+        padding: 3,
+        paddingLeft: 7,
+        paddingRight: 7,
+        borderRadius: 4,
+    },
 });
 
-const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
+const Text = ({ color, fontSize, fontWeight, isBadge, style, ...props }) => {
     const textStyle = [
         styles.text,
         color === 'textSecondary' && styles.colorTextSecondary,
         color === 'primary' && styles.colorPrimary,
         fontSize === 'subheading' && styles.fontSizeSubheading,
         fontWeight === 'bold' && styles.fontWeightBold,
+        isBadge && styles.badge,
         style,
     ];
 
