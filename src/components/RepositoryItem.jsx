@@ -38,7 +38,7 @@ const RepositoryItem = ({ repo }) => {
                 <Image style={styles.favicon} source={{ uri: repo.ownerAvatarUrl }} />
                 <View style={styles.repoDescriptionTextContainer}>
                     <Text fontSize='subheading' fontWeight='bold'>{repo.fullName}</Text>
-                    <Text color='textSecondary' >{repo.description}</Text>
+                    <Text color='textSecondary'>{repo.description}</Text>
                     <Text isBadge style={{ marginTop: 3 }}>{repo.language}</Text>
                 </View>
             </View>
