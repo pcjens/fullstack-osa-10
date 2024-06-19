@@ -11,10 +11,10 @@ const styles = StyleSheet.create({
     },
 });
 
-const AppBarTab = ({ name, route }) => {
+const AppBarTab = ({ name, route, onPress }) => {
     return (
         <Pressable>
-            <Link to={route}>
+            <Link to={route} onPress={onPress}>
                 <Text style={styles.tab} fontSize='subheading' fontWeight='bold'>{name}</Text>
             </Link>
         </Pressable>

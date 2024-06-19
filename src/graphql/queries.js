@@ -13,3 +13,12 @@ export const GET_REPOS_QUERY = gql`
     }
     ${REPO_PARTS_FRAGMENT}
 `;
+
+export const ME_QUERY = gql`
+    query Me {
+        me {
+            id
+            username
+        }
+    }
+`;
