@@ -39,21 +39,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const SignIn = () => {
-    const [signIn] = useSignIn();
-    const navigate = useNavigate();
-
-    const onSubmit = async (values) => {
-        const { username, password } = values;
-        try {
-            const { data } = await signIn({ username, password });
-            console.log(data);
-            navigate('/');
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
+export const SignInContainer = ({ onSubmit }) => {
     const validationSchema = yup.object().shape({
         username: yup.string()
             .required('Username is required'),
@@ -105,6 +91,24 @@ const SignIn = () => {
             </Pressable>
         </View>
     );
+};
+
+const SignIn = () => {
+    const [signIn] = useSignIn();
+    const navigate = useNavigate();
+
+    const onSubmit = async (values) => {
+        const { username, password } = values;
+        try {
+            const { data } = await signIn({ username, password });
+            console.log(data);
+            navigate('/');
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    return <SignInContainer onSubmit={onSubmit} />;
 };
 
 export default SignIn;
