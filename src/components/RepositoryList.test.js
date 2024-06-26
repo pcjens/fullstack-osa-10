@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react-native";
 import { RepositoryListContainer } from "./RepositoryList";
+import { NativeRouter } from "react-router-native";
 
 describe('RepositoryList', () => {
     describe('RepositoryListContainer', () => {
@@ -55,7 +56,11 @@ describe('RepositoryList', () => {
                 }
             };
 
-            render(<RepositoryListContainer repositories={repositories} />);
+            render(
+                <NativeRouter>
+                    <RepositoryListContainer repositories={repositories} />
+                </NativeRouter>
+            );
             expect(screen.getByText('Build forms in React, without the tears')).toBeDefined();
             for (const { node: repo } of repositories.edges) {
                 const repoComponent = screen.getByTestId(`repository-item-${repo.fullName}`);

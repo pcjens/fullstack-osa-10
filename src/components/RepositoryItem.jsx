@@ -1,4 +1,5 @@
-import { View, StyleSheet, Image } from "react-native";
+import { Pressable, View, StyleSheet, Image } from "react-native";
+import * as Linking from 'expo-linking';
 import Text from "./Text";
 import theme from '../theme';
 import StatBox from "./StatBox";
@@ -29,9 +30,17 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginTop: 4,
     },
+    bigLinkButton: {
+        backgroundColor: theme.colors.primary,
+        color: theme.colors.textOnPrimary,
+        textAlign: 'center',
+        padding: 14,
+        borderRadius: 4,
+        marginTop: 16,
+    },
 });
 
-const RepositoryItem = ({ repo }) => {
+const RepositoryItem = ({ repo, showLink }) => {
     return (
         <View testID={`repository-item-${repo.fullName}`} style={styles.container}>
             <View style={styles.repoDescriptionContainer}>
@@ -48,6 +57,13 @@ const RepositoryItem = ({ repo }) => {
                 <StatBox title='Reviews' number={repo.reviewCount} />
                 <StatBox title='Rating' number={repo.ratingAverage} />
             </View>
+            {showLink && repo.url && (
+                <Pressable onPress={() => Linking.openURL(repo.url)}>
+                    <Text fontSize={'subheading'} fontWeight={'bold'} style={styles.bigLinkButton}>
+                        Open in GitHub
+                    </Text>
+                </Pressable>
+            )}
         </View>
     );
 };

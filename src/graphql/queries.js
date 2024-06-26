@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { REPO_PARTS_FRAGMENT } from "./fragments";
 
-export const GET_REPOS_QUERY = gql`
+export const REPOSITORIES_QUERY = gql`
     query GetRepos {
         repositories {
             edges {
@@ -21,4 +21,14 @@ export const ME_QUERY = gql`
             username
         }
     }
+`;
+
+export const REPOSITORY_DETAILS_QUERY = gql`
+    query RepoUrl($id: ID!) {
+        repository(id: $id) {
+            ...RepoParts
+            url
+        }
+    }
+    ${REPO_PARTS_FRAGMENT}
 `;
