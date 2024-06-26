@@ -13,3 +13,16 @@ export const REPO_PARTS_FRAGMENT = gql`
         ownerAvatarUrl
     }
 `;
+
+export const REVIEW_PARTS_FRAGMENT = gql`
+    fragment ReviewParts on Review {
+        id
+        text
+        rating
+        createdAt
+        user {
+            id
+            username
+        }
+    }
+`;

@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { REPO_PARTS_FRAGMENT } from "./fragments";
+import { REPO_PARTS_FRAGMENT, REVIEW_PARTS_FRAGMENT } from "./fragments";
 
 export const REPOSITORIES_QUERY = gql`
     query GetRepos {
@@ -28,7 +28,15 @@ export const REPOSITORY_DETAILS_QUERY = gql`
         repository(id: $id) {
             ...RepoParts
             url
+            reviews {
+                edges {
+                    node {
+                        ...ReviewParts
+                    }
+                }
+            }
         }
     }
     ${REPO_PARTS_FRAGMENT}
+    ${REVIEW_PARTS_FRAGMENT}
 `;
