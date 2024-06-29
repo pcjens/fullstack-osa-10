@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import { FlatList, View, StyleSheet } from 'react-native';
+import { Link } from 'react-router-native';
+import { Picker } from '@react-native-picker/picker';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
-import { Link } from 'react-router-native';
+import { useState } from 'react';
 
 const styles = StyleSheet.create({
     separator: {
@@ -11,7 +14,17 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories }) => {
+const SortCriteriaPicker = ({ selectedSort, setSelectedSort }) => {
+    return (
+        <Picker prompt='Select an item...' selectedValue={selectedSort} onValueChange={(sort) => setSelectedSort(sort)}>
+            <Picker.Item label='Latest repositories' value='createdAtDesc' />
+            <Picker.Item label='Highest rated repositories' value='ratingDesc' />
+            <Picker.Item label='Lowest rated repositories' value='ratingAsc' />
+        </Picker>
+    );
+};
+
+export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCriteria }) => {
     const repositoryNodes = repositories
         ? repositories.edges.map(edge => edge.node)
         : [];
@@ -20,6 +33,7 @@ export const RepositoryListContainer = ({ repositories }) => {
         <FlatList
             data={repositoryNodes}
             ItemSeparatorComponent={ItemSeparator}
+            ListHeaderComponent={<SortCriteriaPicker selectedSort={sortCriteria} setSelectedSort={setSortCriteria} />}
             renderItem={({ item }) => (
                 <Link to={`/Repo/${item.id}`}>
                     <RepositoryItem repo={item} />
@@ -30,9 +44,25 @@ export const RepositoryListContainer = ({ repositories }) => {
 };
 
 const RepositoryList = () => {
-    const { repositories } = useRepositories();
+    const [sortCriteria, setSortCriteria] = useState('createdAtDesc');
+    const { repositories, refetch } = useRepositories();
 
-    return <RepositoryListContainer repositories={repositories} />;
+    useEffect(() => {
+        switch (sortCriteria) {
+            default:
+            case 'createdAtDesc':
+                refetch({ orderBy: 'CREATED_AT', orderDirection: 'DESC' });
+                break;
+            case 'ratingDesc':
+                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'DESC' });
+                break;
+            case 'ratingAsc':
+                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'ASC' });
+                break;
+        }
+    }, [sortCriteria]);
+
+    return <RepositoryListContainer repositories={repositories} sortCriteria={sortCriteria} setSortCriteria={setSortCriteria} />;
 };
 
 export default RepositoryList;
