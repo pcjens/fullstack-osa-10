@@ -12,11 +12,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: theme.colors.contentBackground,
         padding: 16,
-        gap: 16,
     },
     formElement: {
         height: 50,
         borderRadius: 4,
+        marginTop: 16,
+        marginBottom: 4,
     },
     textField: {
         borderWidth: 1,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     },
     error: {
         color: theme.colors.textError,
+        fontSize: theme.fontSizes.subheading,
     },
 });
 

@@ -68,7 +68,11 @@ const RepositoryDetails = () => {
     }
 
     const repo = data?.repository;
-    const reviews = data?.repository.reviews.edges.map(({ node }) => node);
+    if (!repo) {
+        return (<Text>No such repository exists.</Text>);
+    }
+
+    const reviews = data?.repository?.reviews.edges.map(({ node }) => node);
 
     return (
         <FlatList
