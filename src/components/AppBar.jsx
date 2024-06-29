@@ -39,7 +39,8 @@ const AppBar = () => {
                 {signedIn
                     ? (<AppBarTab name='Sign out' onPress={async () => await signOut()} />)
                     : (<AppBarTab name='Sign in' route='/SignIn' />)}
-            </ScrollView>
+                {signedIn || (<AppBarTab name='Sign up' route='/SignUp' />)}
+                </ScrollView>
         </View>
     );
 };
