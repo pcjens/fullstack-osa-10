@@ -1,15 +1,37 @@
 import { useEffect } from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
+import { TextInput, FlatList, View, StyleSheet } from 'react-native';
 import { Link } from 'react-router-native';
 import { Picker } from '@react-native-picker/picker';
+import { useDebounce } from 'use-debounce';
+import Text from './Text';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import { useState } from 'react';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
     separator: {
         height: 10,
     },
+    searchbarContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        columnGap: 16,
+        padding: 8,
+        margin: 16,
+        marginBottom: 0,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        elevation: 4,
+    },
+    searchbarIcon: {
+        marginTop: 4,
+        marginLeft: 6,
+        fontSize: theme.fontSizes.subheading,
+    },
+    searchbarInput: {
+        fontSize: theme.fontSizes.subheading,
+    }
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -24,7 +46,7 @@ const SortCriteriaPicker = ({ selectedSort, setSelectedSort }) => {
     );
 };
 
-export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCriteria }) => {
+export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCriteria, searchbarValue, setSearchbarValue }) => {
     const repositoryNodes = repositories
         ? repositories.edges.map(edge => edge.node)
         : [];
@@ -33,7 +55,17 @@ export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCri
         <FlatList
             data={repositoryNodes}
             ItemSeparatorComponent={ItemSeparator}
-            ListHeaderComponent={<SortCriteriaPicker selectedSort={sortCriteria} setSelectedSort={setSortCriteria} />}
+            ListHeaderComponent={(
+                <View>
+                    <View style={styles.searchbarContainer}>
+                        <Text style={styles.searchbarIcon}>🔎</Text>
+                        <TextInput style={styles.searchbarInput} placeholder='Search for repositories...'
+                            value={searchbarValue}
+                            onChangeText={setSearchbarValue} />
+                    </View>
+                    <SortCriteriaPicker selectedSort={sortCriteria} setSelectedSort={setSortCriteria} />
+                </View>
+            )}
             renderItem={({ item }) => (
                 <Link to={`/Repo/${item.id}`}>
                     <RepositoryItem repo={item} />
@@ -45,24 +77,28 @@ export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCri
 
 const RepositoryList = () => {
     const [sortCriteria, setSortCriteria] = useState('createdAtDesc');
+    const [searchbarValue, setSearchbarValue] = useState('');
+    const [searchKeyword] = useDebounce(searchbarValue, 300);
     const { repositories, refetch } = useRepositories();
 
     useEffect(() => {
         switch (sortCriteria) {
             default:
             case 'createdAtDesc':
-                refetch({ orderBy: 'CREATED_AT', orderDirection: 'DESC' });
+                refetch({ orderBy: 'CREATED_AT', orderDirection: 'DESC', searchKeyword });
                 break;
             case 'ratingDesc':
-                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'DESC' });
+                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'DESC', searchKeyword });
                 break;
             case 'ratingAsc':
-                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'ASC' });
+                refetch({ orderBy: 'RATING_AVERAGE', orderDirection: 'ASC', searchKeyword });
                 break;
         }
-    }, [sortCriteria]);
+    }, [sortCriteria, searchKeyword]);
 
-    return <RepositoryListContainer repositories={repositories} sortCriteria={sortCriteria} setSortCriteria={setSortCriteria} />;
+    return <RepositoryListContainer repositories={repositories}
+        sortCriteria={sortCriteria} setSortCriteria={setSortCriteria}
+        searchbarValue={searchbarValue} setSearchbarValue={setSearchbarValue} />;
 };
 
 export default RepositoryList;
