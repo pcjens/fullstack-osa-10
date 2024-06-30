@@ -36,6 +36,7 @@ const AppBar = () => {
             <ScrollView horizontal>
                 <AppBarTab name='Repositories' route='/' />
                 {signedIn && (<AppBarTab name='Create a review' route='/CreateReview' />)}
+                {signedIn && (<AppBarTab name='My reviews' route='/MyReviews' />)}
                 {signedIn
                     ? (<AppBarTab name='Sign out' onPress={async () => await signOut()} />)
                     : (<AppBarTab name='Sign in' route='/SignIn' />)}

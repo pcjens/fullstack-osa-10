@@ -15,12 +15,20 @@ export const REPOSITORIES_QUERY = gql`
 `;
 
 export const ME_QUERY = gql`
-    query Me {
+    query Me($includeReviews: Boolean = false) {
         me {
             id
             username
+            reviews @include(if: $includeReviews) {
+                edges {
+                    node {
+                        ...ReviewParts
+                    }
+                }
+            }
         }
     }
+    ${REVIEW_PARTS_FRAGMENT}
 `;
 
 export const REPOSITORY_DETAILS_QUERY = gql`
