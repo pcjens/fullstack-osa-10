@@ -20,6 +20,10 @@ export const REVIEW_PARTS_FRAGMENT = gql`
         text
         rating
         createdAt
+        repository {
+            id
+            fullName
+        }
         user {
             id
             username

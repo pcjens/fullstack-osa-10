@@ -11,6 +11,7 @@ const theme = {
         appBarText: '#eee',
         mainBackground: '#e1e4e8',
         contentBackground: 'white',
+        scaryBackground: '#d73a4a',
     },
     fontSizes: {
         body: 14,

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 const Separator = () => <View style={styles.separator} />;
 
 const MyReviews = () => {
-    const { data, loading, error } = useQuery(ME_QUERY, {
+    const { data, loading, error, refetch } = useQuery(ME_QUERY, {
         fetchPolicy: 'cache-and-network',
         variables: { includeReviews: true },
     });
@@ -31,7 +31,7 @@ const MyReviews = () => {
     return (
         <FlatList
             data={reviews}
-            renderItem={({ item }) => <ReviewItem review={item} />}
+            renderItem={({ item }) => <ReviewItem review={item} showManagementButtons useRepoName refetch={refetch} />}
             keyExtractor={({ id }) => id}
             ItemSeparatorComponent={<Separator />}
         />
