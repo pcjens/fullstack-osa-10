@@ -46,7 +46,7 @@ const SortCriteriaPicker = ({ selectedSort, setSelectedSort }) => {
     );
 };
 
-export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCriteria, searchbarValue, setSearchbarValue }) => {
+export const RepositoryListContainer = ({ repositories, onEndReach, sortCriteria, setSortCriteria, searchbarValue, setSearchbarValue }) => {
     const repositoryNodes = repositories
         ? repositories.edges.map(edge => edge.node)
         : [];
@@ -71,6 +71,8 @@ export const RepositoryListContainer = ({ repositories, sortCriteria, setSortCri
                     <RepositoryItem repo={item} />
                 </Link>
             )}
+            onEndReached={onEndReach}
+            onEndReachedThreshold={0.5}
         />
     );
 };
@@ -79,7 +81,7 @@ const RepositoryList = () => {
     const [sortCriteria, setSortCriteria] = useState('createdAtDesc');
     const [searchbarValue, setSearchbarValue] = useState('');
     const [searchKeyword] = useDebounce(searchbarValue, 300);
-    const { repositories, refetch } = useRepositories();
+    const { repositories, refetch, fetchMore } = useRepositories({ first: 4 });
 
     useEffect(() => {
         switch (sortCriteria) {
@@ -96,7 +98,7 @@ const RepositoryList = () => {
         }
     }, [sortCriteria, searchKeyword]);
 
-    return <RepositoryListContainer repositories={repositories}
+    return <RepositoryListContainer repositories={repositories} onEndReach={fetchMore}
         sortCriteria={sortCriteria} setSortCriteria={setSortCriteria}
         searchbarValue={searchbarValue} setSearchbarValue={setSearchbarValue} />;
 };

@@ -7,6 +7,21 @@ const httpLink = createHttpLink({
     uri: Constants.expoConfig.extra.apolloUri,
 });
 
+const cache = new InMemoryCache({
+    typePolicies: {
+        Query: {
+            fields: {
+                repositories: relayStylePagination(),
+            },
+        },
+        Repository: {
+            fields: {
+                reviews: relayStylePagination(),
+            },
+        },
+    },
+});
+
 const createApolloClient = (authStorage) => {
     const authLink = setContext(async (_, { headers }) => {
         try {
@@ -26,20 +41,7 @@ const createApolloClient = (authStorage) => {
     });
     return new ApolloClient({
         link: authLink.concat(httpLink),
-        cache: new InMemoryCache({
-            typePolicies: {
-                Query: {
-                    fields: {
-                        repositories: relayStylePagination(),
-                    },
-                },
-                Repository: {
-                    fields: {
-                        reviews: relayStylePagination(),
-                    },
-                },
-            },
-        }),
+        cache,
     });
 };
 
